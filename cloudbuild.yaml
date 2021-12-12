@@ -11,7 +11,7 @@ steps:
   args:
   - functions
   - deploy
-  - emails
+  - my-uploader
   - --runtime=nodejs16
   - --source=.
   - --trigger-http
