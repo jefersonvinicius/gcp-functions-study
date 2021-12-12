@@ -7,3 +7,11 @@ steps:
   args: ['build']
 - name: 'bash'
   args: ['ls', '-R', 'build/']
+- name: 'gcr.io/cloud-builders/gcloud'
+  args:
+  - functions
+  - deploy
+  - emails
+  - --runtime=nodejs16
+  - --source=.
+  - --trigger-http

@@ -6,7 +6,8 @@
   "scripts": {
     "dev:start": "nodemon --exec ts-node src/server --ext .ts",
     "build": "rimraf ./build && tsc",
-    "prod:start": "yarn build && node src/server.js"
+    "prod:start": "yarn build && node src/server.js",
+    "start:cf": "npx functions-framework --target=my-uploader --signature-type=http"
   },
   "dependencies": {
     "@google-cloud/storage": "^5.16.1",
@@ -20,5 +21,8 @@
     "rimraf": "^3.0.2",
     "ts-node": "^10.4.0",
     "typescript": "^4.5.3"
+  },
+  "devDependencies": {
+    "@google-cloud/functions-framework": "^2.1.0"
   }
 }

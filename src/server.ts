@@ -17,3 +17,5 @@ app.post('/upload', uploadController.handle);
 app.listen(3333, () => {
   console.log('Serving on http://localhost:3333');
 });
+
+export default app;
