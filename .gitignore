@@ -1,0 +1,7 @@
+node_modules
+build
+tmp/*
+uploads/*
+!*/.gitkeep
+.env
+gcp-key.json

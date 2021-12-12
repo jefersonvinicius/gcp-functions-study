@@ -1,0 +1,9 @@
+steps:
+- name: node
+  entrypoint: yarn
+  args: ['install']
+- name: node
+  entrypoint: yarn
+  args: ['build']
+- name: 'bash'
+  args: ['ls', '-R', 'build/']
