@@ -13,5 +13,5 @@ steps:
   - deploy
   - myUploader
   - --runtime=nodejs16
-  - --source=.
+  - --source=build
   - --trigger-http
