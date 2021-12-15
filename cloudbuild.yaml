@@ -17,6 +17,5 @@ steps:
   - deploy
   - myUploader
   - --runtime=nodejs16
-  - --source=.
   - --trigger-http
   - --allow-unauthenticated
