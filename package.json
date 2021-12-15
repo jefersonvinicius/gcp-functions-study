@@ -1,7 +1,7 @@
 {
   "name": "ms-emails-libs",
   "version": "1.0.0",
-  "main": "build/server.js",
+  "main": "index.js",
   "license": "MIT",
   "scripts": {
     "dev:start": "nodemon --exec ts-node src/server --ext .ts",
