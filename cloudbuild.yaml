@@ -8,6 +8,8 @@ steps:
 - name: 'bash'
   args: ['ls', '.']
 - name: 'bash'
+  args: ['cp', 'index.js', build/index.js]
+- name: 'bash'
   args: ['ls', '-R', 'build/']
 - name: 'bash'
   args: ['cat', 'build/app.js']
