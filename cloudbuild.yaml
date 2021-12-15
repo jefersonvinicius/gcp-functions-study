@@ -18,3 +18,5 @@ steps:
   - --source=.
   - --trigger-http
   - --allow-unauthenticated
+- name: 'bash'
+  args: ['cat', 'build', 'server.js']
