@@ -11,6 +11,8 @@ const uploadController = new UploadController();
 
 app.use(express.json());
 app.use('/public', express.static(path.join(__dirname, '/../uploads')));
+
+app.get('/', (_, response) => response.json({ message: 'alive!!' }));
 app.post('/upload', uploadController.handle);
 
 export default app;
