@@ -9,6 +9,8 @@ steps:
   args: ['ls', '.']
 - name: 'bash'
   args: ['ls', '-R', 'build/']
+- name: 'bash'
+  args: ['cat', 'build', 'server.js']
 - name: 'gcr.io/cloud-builders/gcloud'
   args:
   - functions
@@ -18,5 +20,3 @@ steps:
   - --source=.
   - --trigger-http
   - --allow-unauthenticated
-- name: 'bash'
-  args: ['cat', 'build', 'server.js']
