@@ -1,1 +1,1 @@
-exports.myUploader = require('./app').default;
+exports.myUploader = require('./build/app').default;
