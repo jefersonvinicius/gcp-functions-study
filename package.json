@@ -1,13 +1,13 @@
 {
   "name": "ms-emails-libs",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "build/server.js",
   "license": "MIT",
   "scripts": {
     "dev:start": "nodemon --exec ts-node src/server --ext .ts",
     "build": "rimraf ./build && tsc",
-    "prod:start": "yarn build && node src/server.js",
-    "start:cf": "npx functions-framework --target=my-uploader --signature-type=http"
+    "prod:start": "yarn build && node build/server.js",
+    "start:cf": "npx @google-cloud/functions-framework --function-target=app --port=8080 --function-signature-type=http"
   },
   "dependencies": {
     "@google-cloud/storage": "^5.16.1",
