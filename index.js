@@ -1,3 +1,3 @@
 module.exports = {
-  app: require('./build/server').default,
+  app: require('./build/app').default,
 };
