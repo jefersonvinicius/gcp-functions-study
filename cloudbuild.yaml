@@ -15,7 +15,7 @@ steps:
   args:
   - functions
   - deploy
-  - my-uploader
+  - myUploader
   - --runtime=nodejs16
   - --source=.
   - --trigger-http
