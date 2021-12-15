@@ -5,6 +5,8 @@ steps:
 - name: node
   entrypoint: yarn
   args: ['build']
+- name: 'Listing current directory'
+  args: ['ls', '-R', 'build/']
 - name: 'bash'
   args: ['ls', '-R', 'build/']
 - name: 'gcr.io/cloud-builders/gcloud'
