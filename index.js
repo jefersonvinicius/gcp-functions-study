@@ -1,4 +1,1 @@
-exports.myUploader = (req, res) => {
-  console.log('requested_at ', new Date().toISOString());
-  return res.send(':)');
-};
+exports.myUploader = require('./build/app').default;
