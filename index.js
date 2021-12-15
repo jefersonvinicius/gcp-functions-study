@@ -1,3 +1,4 @@
-module.exports = {
-  app: require('./build/app').default,
+exports.app = (req, res) => {
+  console.log('requested_at ', new Date().toISOString());
+  return res.send(':)');
 };
