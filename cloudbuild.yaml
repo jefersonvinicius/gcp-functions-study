@@ -7,8 +7,6 @@ steps:
   args: ['build']
 - name: 'bash'
   args: ['ls', '-R', 'build/']
-- name: 'bash'
-  args: ['cat', 'build/app.js']
 - name: 'gcr.io/cloud-builders/gcloud'
   args:
   - functions
