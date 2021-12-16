@@ -12,6 +12,7 @@ export class UploadController {
   constructor() {}
 
   handle = async (request: Request, response: Response) => {
+    console.log('Content Type: ', request.headers['content-type']);
     const isForSendToGCP = request.query?.uploader === 'gcp';
 
     try {
