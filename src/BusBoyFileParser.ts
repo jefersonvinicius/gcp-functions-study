@@ -6,15 +6,16 @@ import path, { basename, extname } from 'path';
 import { inspect } from 'util';
 import { LIMIT_FILE_SIZE, TMP_PATH } from './config';
 import { FileSizeLimitReached } from './errors/FileSizeLimitReached';
-import { FileAttrs, FileParser } from './interfaces';
+import { FileAttrs, MultiFormDataParser } from './interfaces';
 
-class BusBoyFileParser implements FileParser {
-  parse(request: Request): Promise<FileAttrs | null> {
+class BusBoyFileParser implements MultiFormDataParser {
+  parse<FormSchema = any>(request: Request): Promise<FormSchema | null> {
     return new Promise((resolve, reject) => {
       const headers = {
         ...request.headers,
         'content-type': request.headers['content-type'] ?? '',
       };
+
       const busboy = new Busboy({
         headers,
         limits: {
@@ -23,48 +24,43 @@ class BusBoyFileParser implements FileParser {
         },
       });
 
-      let fileAttrs: FileAttrs | null = null;
-      let fileSizeTotal = 0;
+      const fields: any = {};
+      const filesStreams: Promise<FileAttrs & { fieldName: string }>[] = [];
 
       busboy.on('file', (fieldName, file, filename, encoding, mimeType) => {
+        let fileSizeTotal = 0;
+
         const filePath = createFilePath(extname(filename));
         const fileWriter = fs.createWriteStream(filePath);
 
         file.pipe(fileWriter);
 
-        console.log(
-          'File [' + fieldName + ']: filename: ' + filename + ', encoding: ' + encoding + ', mimetype: ' + mimeType
+        filesStreams.push(
+          new Promise((resolveFile, rejectFile) => {
+            file.on('end', () => {
+              fileWriter.end();
+              const filename = basename(filePath);
+              resolveFile({ filename, size: fileSizeTotal, fieldName });
+            });
+            file.on('data', (chunk) => {
+              fileSizeTotal += Buffer.byteLength(chunk);
+            });
+          })
         );
-
-        file.on('data', (data) => {
-          fileSizeTotal += data.length;
-        });
-
-        file.on('end', () => {
-          fileWriter.end();
-
-          const newFileName = basename(filePath);
-          fileAttrs = {
-            filename: newFileName,
-            size: fileSizeTotal,
-          };
-          console.log('File [' + fieldName + '] Finished');
-        });
-
-        file.on('limit', () => {
-          console.log('File [' + fieldName + ']: Reached the limit of ' + LIMIT_FILE_SIZE);
-          busboy.emit('error', new FileSizeLimitReached());
-        });
       });
 
-      busboy.on('field', (fieldname, val, fieldnameTruncated, valTruncated, encoding, mimetype) => {
-        console.log('Field [' + fieldname + ']: value: ' + inspect(val));
+      busboy.on('field', (fieldName, value) => {
+        console.log('Field [' + fieldName + ']: value: ' + inspect(value));
+        fields[fieldName] = value;
       });
 
-      busboy.on('finish', () => {
+      busboy.on('finish', async () => {
         console.log('Done parsing form!');
-        console.log('File Attrs: ', fileAttrs);
-        return resolve(fileAttrs);
+        const files = await Promise.all(filesStreams);
+        const filesFields = Object.fromEntries(
+          files.map((file) => [file.fieldName, { filename: file.filename, size: file.size } as FileAttrs])
+        );
+        resolve({ ...fields, ...filesFields });
       });
 
       busboy.on('error', (error: any) => {

@@ -5,7 +5,7 @@ export type FileAttrs = {
   filename: string;
 };
 
-export interface FileParser {
+export interface MultiFormDataParser {
   parse(request: Request): Promise<FileAttrs | null>;
 }
 

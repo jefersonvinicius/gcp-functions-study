@@ -8,6 +8,11 @@ import { LocalFileStorage } from './LocalFileStorage';
 const localFileStorage = new LocalFileStorage();
 const gcpFileStorage = new GCPFileStorage();
 
+type BodySchema = {
+  file: FileAttrs;
+  name: string;
+};
+
 export class UploadController {
   constructor() {}
 
@@ -20,13 +25,15 @@ export class UploadController {
     const isForSendToGCP = request.query?.uploader === 'gcp';
 
     try {
-      const file = await busBoyFileParser.parse(request);
-      if (!file) {
+      const form = await busBoyFileParser.parse<BodySchema>(request);
+      console.log(form);
+
+      if (!form?.file) {
         return response.status(500).json({ message: 'Não conseguimos salvar seu arquivo :(' });
       }
 
-      await saveFile(file);
-      return response.json({ file, url: createPublicFileURL(file) });
+      await saveFile(form.file);
+      return response.json({ file: form.file, url: createPublicFileURL(form.file) });
     } catch (error: any) {
       return response.status(500).json({ message: String(error) });
     }
