@@ -17,13 +17,11 @@ export class UploadController {
 
     try {
       const file = await busBoyFileParser.parse(request);
-      if (isForSendToGCP) {
-        console.log('Saving in GCP storage...');
-        await gcpFileStorage.save(file);
-      } else {
-        console.log('Saving in local storage...');
-        await localFileStorage.save(file);
+      if (!file) {
+        return response.status(500).json({ message: 'Não conseguimos salvar seu arquivo :(' });
       }
+
+      await saveFile(file);
       return response.json({ file, url: createPublicFileURL(file) });
     } catch (error: any) {
       return response.status(500).json({ message: String(error) });
@@ -32,6 +30,16 @@ export class UploadController {
     function createPublicFileURL(file: FileAttrs) {
       if (isForSendToGCP) return `https://storage.googleapis.com/${Env.BucketName}/${file.filename}`;
       return request.protocol + '://' + request.headers.host + '/public/' + file.filename;
+    }
+
+    async function saveFile(file: FileAttrs) {
+      if (isForSendToGCP) {
+        console.log('Saving in GCP storage...');
+        await gcpFileStorage.save(file);
+      } else {
+        console.log('Saving in local storage...');
+        await localFileStorage.save(file);
+      }
     }
   };
 }

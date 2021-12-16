@@ -6,7 +6,7 @@ export type FileAttrs = {
 };
 
 export interface FileParser {
-  parse(request: Request): Promise<FileAttrs>;
+  parse(request: Request): Promise<FileAttrs | null>;
 }
 
 export interface FileStorage {

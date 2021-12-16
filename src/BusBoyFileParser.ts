@@ -9,7 +9,7 @@ import { FileSizeLimitReached } from './errors/FileSizeLimitReached';
 import { FileAttrs, FileParser } from './interfaces';
 
 class BusBoyFileParser implements FileParser {
-  parse(request: Request): Promise<FileAttrs> {
+  parse(request: Request): Promise<FileAttrs | null> {
     return new Promise((resolve, reject) => {
       const headers = {
         ...request.headers,
@@ -64,7 +64,6 @@ class BusBoyFileParser implements FileParser {
       busboy.on('finish', () => {
         console.log('Done parsing form!');
         console.log('File Attrs: ', fileAttrs);
-        if (!fileAttrs) return;
         return resolve(fileAttrs);
       });
 
