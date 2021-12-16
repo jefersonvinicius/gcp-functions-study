@@ -20,5 +20,5 @@ steps:
 
 availableSecrets:
   secretManager:
-  - versionName: projects/557041671021/secrets/storage-test-bucket-name
+  - versionName: projects/557041671021/secrets/storage-test-bucket-name/1
     env: 'BUCKET_NAME'
