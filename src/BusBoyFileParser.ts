@@ -8,7 +8,7 @@ import { LIMIT_FILE_SIZE, TMP_PATH } from './config';
 import { FileSizeLimitReached } from './errors/FileSizeLimitReached';
 import { FileAttrs, MultiFormDataParser } from './interfaces';
 
-class BusBoyFileParser implements MultiFormDataParser {
+class BusBoyMultiFormDataParser implements MultiFormDataParser {
   parse<FormSchema = any>(request: Request): Promise<FormSchema | null> {
     return new Promise((resolve, reject) => {
       const headers = {
@@ -77,4 +77,4 @@ class BusBoyFileParser implements MultiFormDataParser {
   }
 }
 
-export const busBoyFileParser = new BusBoyFileParser();
+export const busBoyMultiFormDataParser = new BusBoyMultiFormDataParser();

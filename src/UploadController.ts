@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { busBoyFileParser } from './BusBoyFileParser';
+import { busBoyMultiFormDataParser } from './BusBoyFileParser';
 import { Env } from './config/env';
 import { GCPFileStorage } from './GCPFileStorage';
 import { FileAttrs } from './interfaces';
@@ -25,7 +25,7 @@ export class UploadController {
     const isForSendToGCP = request.query?.uploader === 'gcp';
 
     try {
-      const form = await busBoyFileParser.parse<BodySchema>(request);
+      const form = await busBoyMultiFormDataParser.parse<BodySchema>(request);
       console.log(form);
 
       if (!form?.file) {
