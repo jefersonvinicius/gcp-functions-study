@@ -15,4 +15,9 @@ steps:
   - --runtime=nodejs16
   - --source=build
   - --trigger-http
-  - --set-env-vars=BUCKET_NAME=storage-test-bucket-name:latest
+  - --set-env-vars=BUCKET_NAME=$$BUCKET_NAME
+
+availableSecrets:
+  secretManager:
+  - versionName: projects/557041671021/secrets/storage-test-bucket-name
+    env: 'BUCKET_NAME'
