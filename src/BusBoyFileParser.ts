@@ -64,6 +64,7 @@ class BusBoyFileParser implements FileParser {
 
       busboy.on('finish', () => {
         console.log('Done parsing form!');
+        console.log('File Attrs: ', fileAttrs);
         if (!fileAttrs) return;
         return resolve(fileAttrs);
       });
