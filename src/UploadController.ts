@@ -26,13 +26,18 @@ export class UploadController {
 
     try {
       const form = await busBoyMultiFormDataParser.parse<BodySchema>(request);
-      console.log(form);
+      console.log('form: ', form);
 
       if (!form?.file) {
         return response.status(500).json({ message: 'Não conseguimos salvar seu arquivo :(' });
       }
 
+      console.log('Saving file...');
+
       await saveFile(form.file);
+
+      console.log('File saved');
+
       return response.json({ file: form.file, url: createPublicFileURL(form.file) });
     } catch (error: any) {
       return response.status(500).json({ message: String(error) });
