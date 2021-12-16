@@ -1,5 +1,7 @@
 import { Request, Response } from 'express';
+import { readdirSync, readFileSync } from 'fs';
 import { busBoyMultiFormDataParser } from './BusBoyMultiFormDataParser';
+import { TMP_PATH } from './config';
 import { Env } from './config/env';
 import { GCPFileStorage } from './GCPFileStorage';
 import { FileAttrs } from './interfaces';
@@ -17,16 +19,14 @@ export class UploadController {
   constructor() {}
 
   handle = async (request: Request, response: Response) => {
-    console.log('Content Type: ', request.headers['content-type']);
-    // @ts-ignore
-    console.log('rawBody:  ', request.rawBody);
-    console.log('request.body', request.body);
-
     const isForSendToGCP = request.query?.uploader === 'gcp';
 
     try {
       const form = await busBoyMultiFormDataParser.parse<BodySchema>(request);
       console.log('form: ', form);
+
+      const files = readdirSync(TMP_PATH);
+      console.log('files: ', files);
 
       if (!form?.file) {
         return response.status(500).json({ message: 'Não conseguimos salvar seu arquivo :(' });
