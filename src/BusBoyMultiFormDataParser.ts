@@ -7,6 +7,8 @@ import { inspect } from 'util';
 import { LIMIT_FILE_SIZE, TMP_PATH } from './config';
 import { FileAttrs, MultiFormDataParser } from './interfaces';
 
+type FileStream = FileAttrs & { fieldName: string };
+
 class BusBoyMultiFormDataParser implements MultiFormDataParser {
   parse<FormSchema = any>(request: Request): Promise<FormSchema | null> {
     return new Promise((resolve, reject) => {
@@ -24,7 +26,7 @@ class BusBoyMultiFormDataParser implements MultiFormDataParser {
       });
 
       const fields: any = {};
-      const filesStreams: Promise<FileAttrs & { fieldName: string }>[] = [];
+      const filesStreams: Promise<FileStream>[] = [];
 
       busboy.on('file', (fieldName, file, filename, encoding, mimeType) => {
         let fileSizeTotal = 0;
@@ -44,6 +46,7 @@ class BusBoyMultiFormDataParser implements MultiFormDataParser {
             file.on('data', (chunk) => {
               fileSizeTotal += Buffer.byteLength(chunk);
             });
+            file.on('error', rejectFile);
           })
         );
       });
@@ -53,13 +56,13 @@ class BusBoyMultiFormDataParser implements MultiFormDataParser {
         fields[fieldName] = value;
       });
 
-      busboy.on('finish', async () => {
+      busboy.on('finish', () => {
         console.log('Done parsing form!');
-        const files = await Promise.all(filesStreams);
-        const filesFields = Object.fromEntries(
-          files.map((file) => [file.fieldName, { filename: file.filename, size: file.size } as FileAttrs])
-        );
-        resolve({ ...fields, ...filesFields });
+        Promise.all(filesStreams)
+          .then((files) => {
+            resolve({ ...fields, ...createFilesFields(files) });
+          })
+          .catch(reject);
       });
 
       busboy.on('error', (error: any) => {
@@ -71,6 +74,12 @@ class BusBoyMultiFormDataParser implements MultiFormDataParser {
         busboy.end(request.rawBody);
       } else {
         request.pipe(busboy);
+      }
+
+      function createFilesFields(files: FileStream[]) {
+        return Object.fromEntries(
+          files.map((file) => [file.fieldName, { filename: file.filename, size: file.size } as FileAttrs])
+        );
       }
 
       function createFilePath(extension: string) {
