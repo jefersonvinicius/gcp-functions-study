@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { busBoyMultiFormDataParser } from './BusBoyFileParser';
+import { busBoyMultiFormDataParser } from './BusBoyMultiFormDataParser';
 import { Env } from './config/env';
 import { GCPFileStorage } from './GCPFileStorage';
 import { FileAttrs } from './interfaces';

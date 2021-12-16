@@ -99,5 +99,8 @@
     "skipLibCheck": true                                 /* Skip type checking all .d.ts files. */
   },
   "include": ["src"],
-  "files": ["index.js", "package.json"]
+  "files": ["index.js", "package.json"],
+  "ts-node": {
+    "files": true
+  },
 }

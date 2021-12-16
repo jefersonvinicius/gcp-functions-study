@@ -13,7 +13,7 @@ app.use(express.json());
 app.use('/public', express.static(path.join(__dirname, '/../uploads')));
 
 app.get('/', (_, response) => {
-  return response.json({ message: 'Live!!', version: '1.0.2' });
+  return response.json({ message: 'Live!!', version: '1.0.3' });
 });
 app.post('/upload', uploadController.handle);
 

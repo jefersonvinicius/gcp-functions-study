@@ -5,7 +5,6 @@ import fs from 'fs';
 import path, { basename, extname } from 'path';
 import { inspect } from 'util';
 import { LIMIT_FILE_SIZE, TMP_PATH } from './config';
-import { FileSizeLimitReached } from './errors/FileSizeLimitReached';
 import { FileAttrs, MultiFormDataParser } from './interfaces';
 
 class BusBoyMultiFormDataParser implements MultiFormDataParser {
@@ -68,10 +67,18 @@ class BusBoyMultiFormDataParser implements MultiFormDataParser {
         reject(error);
       });
 
-      request.pipe(busboy);
+      if (shouldUseGCPBodyData()) {
+        busboy.end(request.rawBody);
+      } else {
+        request.pipe(busboy);
+      }
 
       function createFilePath(extension: string) {
         return path.join(TMP_PATH, `${randomUUID()}${extension}`);
+      }
+
+      function shouldUseGCPBodyData() {
+        return !!request?.rawBody;
       }
     });
   }
