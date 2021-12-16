@@ -15,6 +15,7 @@ class BusBoyFileParser implements FileParser {
         ...request.headers,
         'content-type': request.headers['content-type'] ?? '',
       };
+      console.log('Headers: ', headers);
 
       const busboy = new Busboy({
         headers,
