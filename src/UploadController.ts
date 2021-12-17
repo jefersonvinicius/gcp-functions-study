@@ -30,7 +30,7 @@ export class UploadController {
       // console.log('files: ', files);
       console.log(
         files.map((file) => {
-          return { file: lstatSync(file).isFile() };
+          return { [file]: lstatSync(file).isFile() };
         })
       );
 
