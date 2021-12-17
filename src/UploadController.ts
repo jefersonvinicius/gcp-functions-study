@@ -24,26 +24,10 @@ export class UploadController {
 
     try {
       const form = await busBoyMultiFormDataParser.parse<BodySchema>(request);
-      console.log('form: ', form);
-
-      const files = readdirSync('.');
-      // console.log('files: ', files);
-      console.log(
-        files.map((file) => {
-          return { [file]: lstatSync(file).isFile() };
-        })
-      );
-
       if (!form?.file) {
         return response.status(500).json({ message: 'Não conseguimos salvar seu arquivo :(' });
       }
-
-      console.log('Saving file...');
-
       await saveFile(form.file);
-
-      console.log('File saved');
-
       return response.json({ file: form.file, url: createPublicFileURL(form.file) });
     } catch (error: any) {
       return response.status(500).json({ message: String(error) });
@@ -56,10 +40,8 @@ export class UploadController {
 
     async function saveFile(file: FileAttrs) {
       if (isForSendToGCP) {
-        console.log('Saving in GCP storage...');
         await gcpFileStorage.save(file);
       } else {
-        console.log('Saving in local storage...');
         await localFileStorage.save(file);
       }
     }
