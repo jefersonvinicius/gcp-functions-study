@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 import { readdirSync, readFileSync } from 'fs';
+import path from 'path';
 import { busBoyMultiFormDataParser } from './BusBoyMultiFormDataParser';
 import { TMP_PATH } from './config';
 import { Env } from './config/env';
@@ -26,7 +27,7 @@ export class UploadController {
       const form = await busBoyMultiFormDataParser.parse<BodySchema>(request);
       console.log('form: ', form);
 
-      const files = readdirSync(TMP_PATH);
+      const files = readdirSync(path.join('../'));
       console.log('files: ', files);
 
       if (!form?.file) {
