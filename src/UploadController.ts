@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { readdirSync, readFileSync } from 'fs';
+import { lstatSync, readdirSync, readFileSync } from 'fs';
 import path from 'path';
 import { busBoyMultiFormDataParser } from './BusBoyMultiFormDataParser';
 import { TMP_PATH } from './config';
@@ -27,7 +27,12 @@ export class UploadController {
       console.log('form: ', form);
 
       const files = readdirSync('.');
-      console.log('files: ', files);
+      // console.log('files: ', files);
+      console.log(
+        files.map((file) => {
+          return { file: lstatSync(file).isFile() };
+        })
+      );
 
       if (!form?.file) {
         return response.status(500).json({ message: 'Não conseguimos salvar seu arquivo :(' });
