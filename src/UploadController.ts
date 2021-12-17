@@ -20,14 +20,13 @@ export class UploadController {
   constructor() {}
 
   handle = async (request: Request, response: Response) => {
-    console.log(Env);
     const isForSendToGCP = request.query?.uploader === 'gcp';
 
     try {
       const form = await busBoyMultiFormDataParser.parse<BodySchema>(request);
       console.log('form: ', form);
 
-      const files = readdirSync(path.join('../'));
+      const files = readdirSync('.');
       console.log('files: ', files);
 
       if (!form?.file) {
