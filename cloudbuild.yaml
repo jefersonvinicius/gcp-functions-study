@@ -16,7 +16,7 @@ steps:
   - --source=build
   - --trigger-http
   - --set-env-vars=BUCKET_NAME=$BUCKET_NAME
-  secretEn: ['BUCKET_NAME']
+  secretEnv: ['BUCKET_NAME']
 
 availableSecrets:
   secretManager:
